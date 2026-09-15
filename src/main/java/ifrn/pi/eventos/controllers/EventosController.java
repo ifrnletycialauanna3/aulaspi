@@ -89,6 +89,46 @@ public class EventosController {
 		 
 		 
 	 }
+	 
+	 @GetMapping("/{id}/remover")
+	 public String apagarEvento(@PathVariable Long id) {
+		 
+		 Optional<Evento> opt = er.findById(id);
+		 
+		 if(!opt.isEmpty()) {
+			 
+			 Evento evento = opt.get();
+			 
+			 
+			 
+			 List<Convidado> convidados = cr.findByEvento(evento);
+			 
+			 cr.deleteAll(convidados);
+			 er.delete(evento);
+			 
+			 
+			 
+			 return "redirect:/eventos"; 
+		 }
+		 return null;
+		 
+	 }
+		 
+		 @RequestMapping("/deletarConvidado")
+		 public String deletarConvidado(String rg) {
+			 Convidado convidado = cr.findByRg(rg);
+			 cr.delete(convidado);
+			 
+			 Evento evento = convidado.getEvento();
+			 long codigoLong = evento.getId();
+			 String codigo = "" + codigoLong;
+			 
+			 return "redirect:/" + codigo;
+		 
+		 
+		 
+		 
+	 }
 	
 	
 }
