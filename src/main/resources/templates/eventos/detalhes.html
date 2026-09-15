@@ -95,6 +95,7 @@
 								<th>Id:</th>
 								<th>Nome:</th>
 								<th>Rg:</th> 
+								<th></th> 
 								
 								</tr>
 								
@@ -105,6 +106,7 @@
 								<td th:text="${c.id}">1</td>
 								<td th:text="${c.nome}">Leleka</td>
 								<td th:text="${c.rg}">189</td>
+								<td><a th:href="@{/deletarConvidado(rg=${c.rg}"><i class="material-icons">delete</i></a></td>)"
 								
 								</tr>
 								
