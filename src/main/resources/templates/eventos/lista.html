@@ -46,7 +46,10 @@
 					<td><span th:text="${e.local}"></span></td>
 					<td><span th:text="${e.data}"></span></td>
 					<td><span th:text="${e.horario}"></span></td>
-					<td><a th:href="@{/eventos/{id}/remover(id=${e.id})}"><i class="material-icons">delete</i></a></td>
+					<td>
+					<a th:href="@{/eventos/{id}/selecionar(id=${e.id})}"><i class="material-icons">edit</i></a>
+					<a th:href="@{/eventos/{id}/remover(id=${e.id})}"><i class="material-icons">delete</i></a>
+					</td>
 				</tr>
 			</tbody>
 		</table>

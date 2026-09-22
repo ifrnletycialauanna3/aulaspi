@@ -26,15 +26,15 @@ public class EventosController {
 
 // Rota para abrir o formulário -> http://localhost:8080/eventos/form
 	@GetMapping("/form")
-	public String form() {
+	public String form(Evento evento) {
 		return "eventos/formEvento";
 	}
 
 // Rota para salvar o evento
 	@PostMapping
-	public String adicionar(Evento evento) {
+	public String salvar(Evento evento) {
 		er.save(evento);
-		return "eventos/evento-adicionado";
+		return "redirect:/eventos";
 	}
 
 // Rota para listar os eventos -> http://localhost:8080/eventos
@@ -47,7 +47,7 @@ public class EventosController {
 	}
 	
 	@GetMapping("/{id}")
-	 public ModelAndView detalhes(@PathVariable Long id) {
+	 public ModelAndView detalhes(@PathVariable Long id, Convidado convidado) {
 	  ModelAndView md = new ModelAndView();
 	  Optional<Evento> opt = er.findById(id);
 	  
@@ -90,6 +90,60 @@ public class EventosController {
 		 
 	 }
 	 
+@GetMapping("/{id}/selecionar")
+	 public ModelAndView selecionarEvento(@PathVariable Long id) {
+	ModelAndView md = new ModelAndView();
+	Optional<Evento> opt = er.findById(id);
+	if(opt.isEmpty()) {
+		md.setViewName("redirect:/eventos");
+		
+		return md;
+	}
+		
+	Evento evento = opt.get();
+	md.setViewName("eventos/formEvento");
+	md.addObject("evento", evento);
+	
+	return md;
+	
+		 
+	 }
+@GetMapping ("/{idEvento}/convidados/{idConvidado}/selecionar")
+public ModelAndView selecionarConvidado(@PathVariable Long idEvento, @PathVariable Long idConvidado) {
+ModelAndView md = new ModelAndView();
+
+Optional<Evento> optEvento = er.findById(idEvento);
+Optional<Convidado> optConvidado = cr.findById(idConvidado);
+
+if(optEvento.isEmpty() || optConvidado.isEmpty()) {
+	md.setViewName("redirect:/eventos");
+	return md;
+	
+	
+}
+
+
+Evento evento = optEvento.get();
+Convidado convidado = optConvidado.get();
+
+if(evento.getId() != convidado.getEvento().getId()) {
+	
+	md.setViewName("redirect:/eventos");
+	return md;
+	
+	
+}
+
+md.setViewName("eventos/detalhes");
+md.addObject("convidado", convidado);
+md.addObject("evento", evento);
+md.addObject("convidados", cr.findByEvento(evento));
+
+
+return md;
+	
+}
+	 
 	 @GetMapping("/{id}/remover")
 	 public String apagarEvento(@PathVariable Long id) {
 		 
@@ -112,24 +166,37 @@ public class EventosController {
 		 }
 		 return null;
 		 
-	 }
-		 
-		 @RequestMapping("/deletarConvidado")
-		 public String deletarConvidado(String rg) {
-			 Convidado convidado = cr.findByRg(rg);
-			 cr.delete(convidado);
-			 
-			 Evento evento = convidado.getEvento();
-			 long codigoLong = evento.getId();
-			 String codigo = "" + codigoLong;
-			 
-			 return "redirect:/" + codigo;
-		 
 		 
 		 
 		 
 	 }
+	 
+	 @GetMapping("/deletarConvidado/{idConvidado}")
+		public String deletarConvidado(@PathVariable Long idConvidado) {
+			
+			Optional<Convidado> opt = cr.findById(idConvidado);
+			
+			if (!opt.isEmpty()) {
+				Convidado convidado = opt.get();
+				Evento evento = convidado.getEvento();
+				
+				cr.delete(convidado);
+				
+				return "redirect:/eventos/" + evento.getId();
+			}
+			
+			return "redirect:/eventos";
+	 }
+	 
+	 
+		 
+	
+	 }
+		 
+		 
+		 
+	 
 	
 	
-}
+
 
