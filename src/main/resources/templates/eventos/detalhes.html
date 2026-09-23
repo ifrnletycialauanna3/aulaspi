@@ -46,20 +46,26 @@
 					<div class="col s12">
 						<div class="card">
 							<div class="card-content">
-								<span class="card-title">Adicionar Convidado:</span>
-								<form th:action="@{/eventos/{idEvento}(idEvento=${evento.id})}" method="post">
-								<div>
+								<span class="card-title">Adicionar / Editar Convidado:</span>
 								
-								<input type="hidden" name="id" th:value="${convidado.id}">
-								
+								<!-- Exibe a mensagem de validação/sucesso -->
+								<div th:if="${mensagem != null}" class="card-panel teal lighten-2 white-text" style="padding: 10px;">
+									<span th:text="${mensagem}"></span>
 								</div>
+
+								<form th:action="@{/eventos/{idEvento}(idEvento=${evento.id})}" method="post">
+									<input type="hidden" name="id" th:value="${convidado?.id}">
+									
 									<div>
-										<label> Nome: </label> <input type="text" name="nome" th:value="${convidado.nome}">
+										<label> Nome: </label> 
+										<input type="text" name="nome" th:value="${convidado?.nome}">
 									</div>
 
 									<div>
-										<label> RG: </label> <input type="text" name="rg" th:value="${convidado.rg}">
+										<label> RG: </label> 
+										<input type="text" name="rg" th:value="${convidado?.rg}">
 									</div>
+									
 									<div>
 										<button type="submit" class="btn">Salvar</button>
 										<button type="reset" class="btn">Limpar</button>
@@ -73,44 +79,45 @@
 				</div>
 			</div>
 		</div>
-	</div>
-	
-	<div class="row">
-		<div class="col s12">
-			<div class="card">
-				<div class="card-content">
-					<span class="card-title">Convidados:</span>
-					
-					<table class="highlight">
-						<thead>
-							<tr>
-								<th>Id:</th>
-								<th>Nome:</th>
-								<th>Rg:</th> 
-								<th></th> 
-							</tr>
-						</thead>
-						<tbody>
-							<tr th:each="c : ${convidados}">
-								<td th:text="${c.id}">1</td>
-								<td th:text="${c.nome}">Leleka</td>
-								<td th:text="${c.rg}">189</td>
-								<td>
-									<a th:href="@{/eventos/{idEvento}/convidados/{idConvidado}/selecionar(idEvento=${evento.id}, idConvidado=${c.id})}">
-										<i class="material-icons">edit</i>
-									</a>
-									<a th:href="@{/eventos/deletarConvidado/{id}(id=${c.id})}">
-										<i class="material-icons">delete</i>
-									</a>
-								</td>
-							</tr>
-						</tbody>
-					</table>
+
+		<div class="row">
+			<div class="col s12">
+				<div class="card">
+					<div class="card-content">
+						<span class="card-title">Convidados:</span>
+						
+						<table class="highlight">
+							<thead>
+								<tr>
+									<th>Id:</th>
+									<th>Nome:</th>
+									<th>Rg:</th> 
+									<th></th> 
+								</tr>
+							</thead>
+							<tbody>
+								<tr th:each="c : ${convidados}">
+									<td th:text="${c.id}">1</td>
+									<td th:text="${c.nome}">Leleka</td>
+									<td th:text="${c.rg}">189</td>
+									<td>
+										<a th:href="@{/eventos/{idEvento}/convidados/{idConvidado}/selecionar(idEvento=${evento.id}, idConvidado=${c.id})}">
+											<i class="material-icons">edit</i>
+										</a>
+										<a th:href="@{/eventos/deletarConvidado/{idConvidado}(idConvidado=${c.id})}">
+											<i class="material-icons">delete</i>
+										</a>
+									</td>
+								</tr>
+							</tbody>
+						</table>
+
+					</div>
 
 				</div>
-
 			</div>
 		</div>
+
 	</div>
 
 </body>
